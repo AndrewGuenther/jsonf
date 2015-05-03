@@ -7,6 +7,7 @@ import (
 	"io"
 	"log"
 	"os"
+	"strconv"
 )
 
 func main() {
@@ -22,12 +23,12 @@ func main() {
 }
 
 type JsonfOptions struct {
-	decoder   *json.Decoder
-	output    io.Writer
-	keyWrap   string
-	strWrap   string
-	arrWrap   string
-	seperator string
+	decoder     *json.Decoder
+	output      io.Writer
+	keyWrap     string
+	arrWrap     string
+	seperator   string
+	includeKeys bool
 }
 
 func HandleArgs(opts *JsonfOptions) {
@@ -36,9 +37,9 @@ func HandleArgs(opts *JsonfOptions) {
 	var outputFile string
 	flag.StringVar(&outputFile, "o", "", "The output file. Defaults to stdout.")
 	flag.StringVar(&opts.keyWrap, "k", "{}", "The runes used to wrap output keys.")
-	flag.StringVar(&opts.strWrap, "s", "\"\"", "The runes used to wrap output strings.")
 	flag.StringVar(&opts.arrWrap, "a", "[]", "The runes used to wrap output array indexes.")
-	flag.StringVar(&opts.seperator, "sep", "->", "String used to seperate keys.")
+	flag.StringVar(&opts.seperator, "sep", ">", "String used to seperate keys.")
+	flag.BoolVar(&opts.includeKeys, "keys", false, "If true, keys are printed on their own line.")
 
 	flag.Parse()
 
@@ -61,16 +62,13 @@ func HandleArgs(opts *JsonfOptions) {
 	if len(opts.keyWrap) != 2 {
 		panic("-k must contain exactly two characters")
 	}
-	if len(opts.strWrap) != 2 {
-		panic("-s must contain exactly two characters")
-	}
 	if len(opts.arrWrap) != 2 {
 		panic("-a must contain exactly two characters")
 	}
 }
 
 func Jsonf(opts JsonfOptions) {
-	for {
+	for numReads := 0; ; numReads++ {
 		var json interface{}
 		if err := opts.decoder.Decode(&json); err != nil {
 			if err.Error() != "EOF" {
@@ -79,7 +77,7 @@ func Jsonf(opts JsonfOptions) {
 				return
 			}
 		}
-		ProcessJsonValue(opts, "", json)
+		ProcessJsonValue(opts, strconv.Itoa(numReads), json)
 	}
 }
 
@@ -88,17 +86,21 @@ func ProcessJsonValue(opts JsonfOptions, leadKey string, json interface{}) {
 	case map[string]interface{}:
 		for key, value := range json.(map[string]interface{}) {
 			keyLead := fmt.Sprintf("%s%s%c%s%c", leadKey, opts.seperator, opts.keyWrap[0], key, opts.keyWrap[1])
-			fmt.Fprintln(opts.output, keyLead)
+			if opts.includeKeys {
+				fmt.Fprintln(opts.output, keyLead)
+			}
 			ProcessJsonValue(opts, keyLead, value)
 		}
 	case []interface{}:
-		fmt.Fprintf(opts.output, "%s%s%c%c\n", leadKey, opts.seperator, opts.arrWrap[0], opts.arrWrap[1])
+		if opts.includeKeys {
+			fmt.Fprintf(opts.output, "%s%s%c%c\n", leadKey, opts.seperator, opts.arrWrap[0], opts.arrWrap[1])
+		}
 		for index, value := range json.([]interface{}) {
 			elemLead := fmt.Sprintf("%s%s%c%d%c", leadKey, opts.seperator, opts.arrWrap[0], index, opts.arrWrap[1])
 			ProcessJsonValue(opts, elemLead, value)
 		}
 	case string:
-		fmt.Fprintf(opts.output, "%s%s%c%s%c\n", leadKey, opts.seperator, opts.strWrap[0], json, opts.strWrap[1])
+		fmt.Fprintf(opts.output, "%s%s%s\n", leadKey, opts.seperator, strconv.Quote(json.(string)))
 	default:
 		fmt.Fprintf(opts.output, "%s%s%v\n", leadKey, opts.seperator, json)
 	}

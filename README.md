@@ -11,26 +11,27 @@ Usage of jsonf:
   -a="[]": The runes used to wrap output array indexes.
   -i="": The input file. Defaults to stdin.
   -k="{}": The runes used to wrap output keys.
+  -keys=false: If true, keys are printed on their own line.
   -o="": The output file. Defaults to stdout.
   -s="\"\"": The runes used to wrap output strings.
-  -sep="->": String used to seperate keys.
+  -sep=">": String used to seperate keys.
 ```
 
 ```bash
-$ jsonf
+$ jsonf --keys
 {"colors": ["red", "blue", "green"], "numbers": [1, 2, 3], "active": true}
-->{active}
-->{active}->true
-->{colors}
-->{colors}->[]
-->{colors}->[0]->"red"
-->{colors}->[1]->"blue"
-->{colors}->[2]->"green"
-->{numbers}
-->{numbers}->[]
-->{numbers}->[0]->1
-->{numbers}->[1]->2
-->{numbers}->[2]->3
+>{active}
+>{active}>true
+>{colors}
+>{colors}>[]
+>{colors}>[0]>"red"
+>{colors}>[1]>"blue"
+>{colors}>[2]>"green"
+>{numbers}
+>{numbers}>[]
+>{numbers}>[0]>1
+>{numbers}>[1]>2
+>{numbers}>[2]>3
 ```
 
 # Examples
@@ -39,7 +40,7 @@ $ jsonf
 
 ```bash
 $ curl -s 'https://api.github.com/repos/andrewguenther/jsonf/commits' |
-  jsonf -sep='>' |
+  jsonf |
   grep -a "\[0\].*{commit}>{committer}>.*>" |
   cut -d ">" -f 5,6
 {name}>"Andrew Guenther"
@@ -51,7 +52,7 @@ $ curl -s 'https://api.github.com/repos/andrewguenther/jsonf/commits' |
 
 ```bash
 $ curl -s 'https://www.reddit.com/.json' |
-  jsonf -sep='>' |
+  jsonf |
   grep '>{data}>{children}>\[.\+\]>{data}>{url}>' |
   cut -d '>' -f 7
 "https://i.imgur.com/qH91IEl.gifv"
