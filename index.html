@@ -1,0 +1,121 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Jsonf by AndrewGuenther</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/github-light.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Jsonf</h1>
+        <p>A Unix-y utility for formatting JSON in a more stream-friendly way</p>
+
+        <p class="view"><a href="https://github.com/AndrewGuenther/jsonf">View the Project on GitHub <small>AndrewGuenther/jsonf</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/AndrewGuenther/jsonf/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/AndrewGuenther/jsonf/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/AndrewGuenther/jsonf">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>
+<a id="jsonf" class="anchor" href="#jsonf" aria-hidden="true"><span class="octicon octicon-link"></span></a>jsonf</h1>
+
+<p>A Unix-y utility for formatting JSON in a more stream-friendly way.</p>
+
+<h1>
+<a id="usage" class="anchor" href="#usage" aria-hidden="true"><span class="octicon octicon-link"></span></a>Usage</h1>
+
+<p><code>jsonf</code> reads from <code>stdin</code> and writes to <code>stdout</code> by default.</p>
+
+<div class="highlight highlight-bash"><pre>$ jsonf --help
+Usage of jsonf:
+  -a=<span class="pl-s"><span class="pl-pds">"</span>[]<span class="pl-pds">"</span></span>: The runes used to wrap output array indexes.
+  -i=<span class="pl-s"><span class="pl-pds">"</span><span class="pl-pds">"</span></span>: The input file. Defaults to stdin.
+  -k=<span class="pl-s"><span class="pl-pds">"</span>{}<span class="pl-pds">"</span></span>: The runes used to wrap output keys.
+  -keys=<span class="pl-c1">false</span>: If <span class="pl-c1">true</span>, keys are printed on their own line.
+  -o=<span class="pl-s"><span class="pl-pds">"</span><span class="pl-pds">"</span></span>: The output file. Defaults to stdout.
+  -s=<span class="pl-s"><span class="pl-pds">"</span><span class="pl-cce">\"\"</span><span class="pl-pds">"</span></span>: The runes used to wrap output strings.
+  -sep=<span class="pl-s"><span class="pl-pds">"</span>&gt;<span class="pl-pds">"</span></span>: String used to seperate keys.</pre></div>
+
+<div class="highlight highlight-bash"><pre>$ jsonf --keys
+{<span class="pl-s"><span class="pl-pds">"</span>colors<span class="pl-pds">"</span></span>: [<span class="pl-s"><span class="pl-pds">"</span>red<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>blue<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>green<span class="pl-pds">"</span></span>], <span class="pl-s"><span class="pl-pds">"</span>numbers<span class="pl-pds">"</span></span>: [1, 2, 3], <span class="pl-s"><span class="pl-pds">"</span>active<span class="pl-pds">"</span></span>: <span class="pl-c1">true</span>}
+<span class="pl-k">&gt;</span>{active}
+<span class="pl-k">&gt;</span>{active}<span class="pl-k">&gt;</span><span class="pl-c1">true</span>
+<span class="pl-k">&gt;</span>{colors}
+<span class="pl-k">&gt;</span>{colors}<span class="pl-k">&gt;</span>[]
+<span class="pl-k">&gt;</span>{colors}<span class="pl-k">&gt;</span>[0]<span class="pl-k">&gt;</span><span class="pl-s"><span class="pl-pds">"</span>red<span class="pl-pds">"</span></span>
+<span class="pl-k">&gt;</span>{colors}<span class="pl-k">&gt;</span>[1]<span class="pl-k">&gt;</span><span class="pl-s"><span class="pl-pds">"</span>blue<span class="pl-pds">"</span></span>
+<span class="pl-k">&gt;</span>{colors}<span class="pl-k">&gt;</span>[2]<span class="pl-k">&gt;</span><span class="pl-s"><span class="pl-pds">"</span>green<span class="pl-pds">"</span></span>
+<span class="pl-k">&gt;</span>{numbers}
+<span class="pl-k">&gt;</span>{numbers}<span class="pl-k">&gt;</span>[]
+<span class="pl-k">&gt;</span>{numbers}<span class="pl-k">&gt;</span>[0]<span class="pl-k">&gt;</span>1
+<span class="pl-k">&gt;</span>{numbers}<span class="pl-k">&gt;</span>[1]<span class="pl-k">&gt;</span>2
+<span class="pl-k">&gt;</span>{numbers}<span class="pl-k">&gt;</span>[2]<span class="pl-k">&gt;</span>3</pre></div>
+
+<h1>
+<a id="examples" class="anchor" href="#examples" aria-hidden="true"><span class="octicon octicon-link"></span></a>Examples</h1>
+
+<h3>
+<a id="get-information-about-the-most-recent-commit-on-this-repository" class="anchor" href="#get-information-about-the-most-recent-commit-on-this-repository" aria-hidden="true"><span class="octicon octicon-link"></span></a>Get information about the most recent commit on this repository</h3>
+
+<div class="highlight highlight-bash"><pre>$ curl -s <span class="pl-s"><span class="pl-pds">'</span>https://api.github.com/repos/andrewguenther/jsonf/commits<span class="pl-pds">'</span></span> <span class="pl-k">|</span>
+  jsonf <span class="pl-k">|</span>
+  grep -a <span class="pl-s"><span class="pl-pds">"</span>\[0\].*{commit}&gt;{committer}&gt;.*&gt;<span class="pl-pds">"</span></span> <span class="pl-k">|</span>
+  cut -d <span class="pl-s"><span class="pl-pds">"</span>&gt;<span class="pl-pds">"</span></span> -f 5,6
+{name}<span class="pl-k">&gt;</span><span class="pl-s"><span class="pl-pds">"</span>Andrew Guenther<span class="pl-pds">"</span></span>
+{email}<span class="pl-k">&gt;</span><span class="pl-s"><span class="pl-pds">"</span>guenther.andrew.j@gmail.com<span class="pl-pds">"</span></span>
+{date}<span class="pl-k">&gt;</span><span class="pl-s"><span class="pl-pds">"</span>2015-05-02T09:24:43Z<span class="pl-pds">"</span></span></pre></div>
+
+<h3>
+<a id="get-all-the-front-page-links-on-reddit" class="anchor" href="#get-all-the-front-page-links-on-reddit" aria-hidden="true"><span class="octicon octicon-link"></span></a>Get all the front page links on Reddit</h3>
+
+<div class="highlight highlight-bash"><pre>$ curl -s <span class="pl-s"><span class="pl-pds">'</span>https://www.reddit.com/.json<span class="pl-pds">'</span></span> <span class="pl-k">|</span>
+  jsonf <span class="pl-k">|</span>
+  grep <span class="pl-s"><span class="pl-pds">'</span>&gt;{data}&gt;{children}&gt;\[.\+\]&gt;{data}&gt;{url}&gt;<span class="pl-pds">'</span></span> <span class="pl-k">|</span>
+  cut -d <span class="pl-s"><span class="pl-pds">'</span>&gt;<span class="pl-pds">'</span></span> -f 7
+<span class="pl-s"><span class="pl-pds">"</span>https://i.imgur.com/qH91IEl.gifv<span class="pl-pds">"</span></span>
+<span class="pl-s"><span class="pl-pds">"</span>http://imgur.com/MUXn9fD<span class="pl-pds">"</span></span>
+<span class="pl-s"><span class="pl-pds">"</span>http://www.mnn.com//earth-matters/wilderness-resources/stories/more-trees-than-there-were-100-years-ago-its-true<span class="pl-pds">"</span></span>
+<span class="pl-s"><span class="pl-pds">"</span>http://imgur.com/mjbuXpA<span class="pl-pds">"</span></span>
+<span class="pl-s"><span class="pl-pds">"</span>http://i.imgur.com/XJ2SG5J.jpg<span class="pl-pds">"</span></span>
+<span class="pl-s"><span class="pl-pds">"</span>http://imgur.com/tvUSaLZ<span class="pl-pds">"</span></span>
+<span class="pl-s"><span class="pl-pds">"</span>http://www.reddit.com/r/science/comments/34kxuh/do_you_have_a_college_degree_or_higher_in_science/<span class="pl-pds">"</span></span>
+<span class="pl-s"><span class="pl-pds">"</span>http://imgur.com/qOPPuzb<span class="pl-pds">"</span></span>
+<span class="pl-s"><span class="pl-pds">"</span>http://www.reuters.com/article/2015/04/30/us-usa-police-apps-idUSKBN0NL2SK20150430<span class="pl-pds">"</span></span>
+<span class="pl-s"><span class="pl-pds">"</span>https://m.youtube.com/watch?v=pNHpDG9dZq0<span class="pl-pds">"</span></span>
+<span class="pl-s"><span class="pl-pds">"</span>http://www.thefix.com/content/ecuador-considers-decriminalizing-all-illegal-drug-use<span class="pl-pds">"</span></span>
+<span class="pl-s"><span class="pl-pds">"</span>http://i.imgur.com/9x6acUY.jpg<span class="pl-pds">"</span></span>
+<span class="pl-s"><span class="pl-pds">"</span>http://www.hollywoodreporter.com/news/adam-sandlers-ridiculous-six-makeup-792582<span class="pl-pds">"</span></span>
+<span class="pl-s"><span class="pl-pds">"</span>http://www.reddit.com/r/AskReddit/comments/34kkcs/pregnant_people_of_reddit_whats_the_rudestmost/<span class="pl-pds">"</span></span>
+<span class="pl-s"><span class="pl-pds">"</span>http://imgur.com/5Q1RzVV<span class="pl-pds">"</span></span>
+<span class="pl-s"><span class="pl-pds">"</span>http://www.reddit.com/r/Jokes/comments/34kihw/how_many_reddit_mods_does_it_take_to_change_a/<span class="pl-pds">"</span></span>
+<span class="pl-s"><span class="pl-pds">"</span>http://imgur.com/a/8aFdi<span class="pl-pds">"</span></span>
+<span class="pl-s"><span class="pl-pds">"</span>http://www.cbsnews.com/news/woman-texted-driving-drunk-woo-just-before-fatal-crash/<span class="pl-pds">"</span></span>
+<span class="pl-s"><span class="pl-pds">"</span>http://imgur.com/a/Rzrk9<span class="pl-pds">"</span></span>
+<span class="pl-s"><span class="pl-pds">"</span>http://www.reddit.com/r/Showerthoughts/comments/34j0r7/that_google_chrome_what_tab_is_being_noisy/<span class="pl-pds">"</span></span>
+<span class="pl-s"><span class="pl-pds">"</span>http://i.imgur.com/vuBumaG.jpg<span class="pl-pds">"</span></span>
+<span class="pl-s"><span class="pl-pds">"</span>http://www.reddit.com/r/WritingPrompts/comments/34j4ph/wp_elon_musk_is_actually_a_stranded_alien_who/<span class="pl-pds">"</span></span>
+<span class="pl-s"><span class="pl-pds">"</span>http://www.reddit.com/r/IAmA/comments/34k027/i_am_noel_gallagher_amaa/<span class="pl-pds">"</span></span>
+<span class="pl-s"><span class="pl-pds">"</span>http://imgur.com/O4hkbVt<span class="pl-pds">"</span></span>
+<span class="pl-s"><span class="pl-pds">"</span>http://imgur.com/a/lDn0S<span class="pl-pds">"</span></span></pre></div>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/AndrewGuenther">AndrewGuenther</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
+</html>
